@@ -1,0 +1,3 @@
+[CodeIgniter]
+    git=git@github.com:thomaroger/CodeIgniter.git
+    target=.
