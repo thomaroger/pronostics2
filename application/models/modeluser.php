@@ -42,6 +42,8 @@ class Modeluser extends CI_MODEL {
       return false;
     }
     
+    
+    
     public static function generateTicket($user){
       $ticket = $user->User_Id.":".md5($user->User_Id.''.$user->User_Lastname.''.$user->User_Email.''.self::KEY);
       return $ticket;

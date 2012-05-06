@@ -2,6 +2,7 @@
 
 class Championship extends CI_Controller {
 
+
 	public function index()
 	{
     $ticket = $this->input->cookie('ticket');
@@ -9,7 +10,9 @@ class Championship extends CI_Controller {
     if($user === false){
       redirect('/login/fail');  
     }
-    echo "toto";
+    
+    $championships = $this->modelChampionship->getChampionships($user);
+    var_dump($championships);
   }
 }
 
