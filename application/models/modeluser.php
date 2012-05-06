@@ -7,9 +7,14 @@ class Modeluser extends CI_MODEL {
         parent::__construct();
     }
     
-    public function checkSignin(){
-      var_dump($_POST);
-      return true;
+    public function checkSignin($email, $password){
+      $this->db->where('User_Email',$email);
+      $this->db->where('User_Password',md5($password));
+      $query = $this->db->get('User');
+      if($query->num_rows() == 1){
+        return true;
+      }
+      return false;
     }
     
 }
