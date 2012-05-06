@@ -4,8 +4,9 @@ class Modeluser extends CI_MODEL {
     const KEY = "0mT1aH2tO3hM4iA5eS6uR7rO8oG9gE0eR1r"; 
     
     public function checkSignin($email, $password){
-      $this->db->where('User_Email',$email);
-      $this->db->where('User_Password',md5($password));
+      $where = array('User_Email' => $email,
+                     'User_Password' => md5($password));
+      $this->db->where($where);
       $query = $this->db->get('User');
       if($query->num_rows() == 1){
         $this->setCookie($query);
