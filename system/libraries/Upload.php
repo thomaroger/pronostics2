@@ -1,13 +1,25 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 5.1.6 or newer
+ * An open source application development framework for PHP 5.2.4 or newer
+ *
+ * NOTICE OF LICENSE
+ *
+ * Licensed under the Open Software License version 3.0
+ *
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
  *
  * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2012, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
@@ -21,7 +33,7 @@
  * @package		CodeIgniter
  * @subpackage	Libraries
  * @category	Uploads
- * @author		ExpressionEngine Dev Team
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/file_uploading.html
  */
 class CI_Upload {
@@ -30,6 +42,7 @@ class CI_Upload {
 	public $max_width				= 0;
 	public $max_height				= 0;
 	public $max_filename			= 0;
+	public $max_filename_increment 	= 100;
 	public $allowed_types			= "";
 	public $file_temp				= "";
 	public $file_name				= "";
@@ -80,31 +93,32 @@ class CI_Upload {
 	public function initialize($config = array())
 	{
 		$defaults = array(
-							'max_size'			=> 0,
-							'max_width'			=> 0,
-							'max_height'		=> 0,
-							'max_filename'		=> 0,
-							'allowed_types'		=> "",
-							'file_temp'			=> "",
-							'file_name'			=> "",
-							'orig_name'			=> "",
-							'file_type'			=> "",
-							'file_size'			=> "",
-							'file_ext'			=> "",
-							'upload_path'		=> "",
-							'overwrite'			=> FALSE,
-							'encrypt_name'		=> FALSE,
-							'is_image'			=> FALSE,
-							'image_width'		=> '',
-							'image_height'		=> '',
-							'image_type'		=> '',
-							'image_size_str'	=> '',
-							'error_msg'			=> array(),
-							'mimes'				=> array(),
-							'remove_spaces'		=> TRUE,
-							'xss_clean'			=> FALSE,
-							'temp_prefix'		=> "temp_file_",
-							'client_name'		=> ''
+							'max_size'					=> 0,
+							'max_width'					=> 0,
+							'max_height'				=> 0,
+							'max_filename'				=> 0,
+							'max_filename_increment'	=> 100,
+							'allowed_types'				=> "",
+							'file_temp'					=> "",
+							'file_name'					=> "",
+							'orig_name'					=> "",
+							'file_type'					=> "",
+							'file_size'					=> "",
+							'file_ext'					=> "",
+							'upload_path'				=> "",
+							'overwrite'					=> FALSE,
+							'encrypt_name'				=> FALSE,
+							'is_image'					=> FALSE,
+							'image_width'				=> '',
+							'image_height'				=> '',
+							'image_type'				=> '',
+							'image_size_str'			=> '',
+							'error_msg'					=> array(),
+							'mimes'						=> array(),
+							'remove_spaces'				=> TRUE,
+							'xss_clean'					=> FALSE,
+							'temp_prefix'				=> "temp_file_",
+							'client_name'				=> ''
 						);
 
 
@@ -403,7 +417,7 @@ class CI_Upload {
 		$filename = str_replace($this->file_ext, '', $filename);
 
 		$new_filename = '';
-		for ($i = 1; $i < 100; $i++)
+		for ($i = 1; $i < $this->max_filename_increment; $i++)
 		{
 			if ( ! file_exists($path.$filename.$i.$this->file_ext))
 			{
@@ -579,16 +593,17 @@ class CI_Upload {
 	/**
 	 * Verify that the filetype is allowed
 	 *
+	 * @param	bool
 	 * @return	bool
 	 */
 	public function is_allowed_filetype($ignore_mime = FALSE)
 	{
-		if ($this->allowed_types == '*')
+		if ($this->allowed_types === '*')
 		{
 			return TRUE;
 		}
 
-		if (count($this->allowed_types) == 0 OR ! is_array($this->allowed_types))
+		if ( ! is_array($this->allowed_types) OR count($this->allowed_types) === 0)
 		{
 			$this->set_error('upload_no_file_types');
 			return FALSE;
@@ -604,12 +619,9 @@ class CI_Upload {
 		// Images get some additional checks
 		$image_types = array('gif', 'jpg', 'jpeg', 'png', 'jpe');
 
-		if (in_array($ext, $image_types))
+		if (in_array($ext, $image_types) && @getimagesize($this->file_temp) === FALSE)
 		{
-			if (getimagesize($this->file_temp) === FALSE)
-			{
-				return FALSE;
-			}
+			return FALSE;
 		}
 
 		if ($ignore_mime === TRUE)
@@ -626,7 +638,7 @@ class CI_Upload {
 				return TRUE;
 			}
 		}
-		elseif ($mime == $this->file_type)
+		elseif ($mime === $this->file_type)
 		{
 				return TRUE;
 		}
@@ -920,13 +932,7 @@ class CI_Upload {
 	 */
 	public function display_errors($open = '<p>', $close = '</p>')
 	{
-		$str = '';
-		foreach ($this->error_msg as $val)
-		{
-			$str .= $open.$val.$close;
-		}
-
-		return $str;
+		return (count($this->error_msg) > 0) ? $open . implode($close . $open, $this->error_msg) . $close : '';
 	}
 
 	// --------------------------------------------------------------------
@@ -952,7 +958,7 @@ class CI_Upload {
 			}
 			elseif (is_file(APPPATH.'config/mimes.php'))
 			{
-				include(APPPATH.'config//mimes.php');
+				include(APPPATH.'config/mimes.php');
 			}
 			else
 			{
@@ -1018,47 +1024,104 @@ class CI_Upload {
 	 */
 	protected function _file_mime_type($file)
 	{
-		// Use if the Fileinfo extension, if available (only versions above 5.3 support the FILEINFO_MIME_TYPE flag)
-		if ( (float) substr(phpversion(), 0, 3) >= 5.3 && function_exists('finfo_file'))
+		// We'll need this to validate the MIME info string (e.g. text/plain; charset=us-ascii)
+		$regexp = '/^([a-z\-]+\/[a-z0-9\-\.\+]+)(;\s.+)?$/';
+
+		/* Fileinfo extension - most reliable method
+		 *
+		 * Unfortunately, prior to PHP 5.3 - it's only available as a PECL extension and the
+		 * more convenient FILEINFO_MIME_TYPE flag doesn't exist.
+		 */
+		if (function_exists('finfo_file'))
 		{
-			$finfo = new finfo(FILEINFO_MIME_TYPE);
-			if ($finfo !== FALSE) // This is possible, if there is no magic MIME database file found on the system
+			$finfo = finfo_open(FILEINFO_MIME);
+			if (is_resource($finfo)) // It is possible that a FALSE value is returned, if there is no magic MIME database file found on the system
 			{
-				$file_type = $finfo->file($file['tmp_name']);
+				$mime = @finfo_file($finfo, $file['tmp_name']);
+				finfo_close($finfo);
 
 				/* According to the comments section of the PHP manual page,
 				 * it is possible that this function returns an empty string
 				 * for some files (e.g. if they don't exist in the magic MIME database)
 				 */
-				if (strlen($file_type) > 1)
+				if (is_string($mime) && preg_match($regexp, $mime, $matches))
 				{
-					$this->file_type = $file_type;
+					$this->file_type = $matches[1];
 					return;
 				}
 			}
 		}
 
-		// Fall back to the deprecated mime_content_type(), if available
+		/* This is an ugly hack, but UNIX-type systems provide a "native" way to detect the file type,
+		 * which is still more secure than depending on the value of $_FILES[$field]['type'], and as it
+		 * was reported in issue #750 (https://github.com/EllisLab/CodeIgniter/issues/750) - it's better
+		 * than mime_content_type() as well, hence the attempts to try calling the command line with
+		 * three different functions.
+		 *
+		 * Notes:
+		 *	- the DIRECTORY_SEPARATOR comparison ensures that we're not on a Windows system
+		 *	- many system admins would disable the exec(), shell_exec(), popen() and similar functions
+		 *	  due to security concerns, hence the function_exists() checks
+		 */
+		if (DIRECTORY_SEPARATOR !== '\\')
+		{
+			$cmd = 'file --brief --mime ' . escapeshellarg($file['tmp_name']) . ' 2>&1';
+
+			if (function_exists('exec'))
+			{
+				/* This might look confusing, as $mime is being populated with all of the output when set in the second parameter.
+				 * However, we only neeed the last line, which is the actual return value of exec(), and as such - it overwrites
+				 * anything that could already be set for $mime previously. This effectively makes the second parameter a dummy
+				 * value, which is only put to allow us to get the return status code.
+				 */
+				$mime = @exec($cmd, $mime, $return_status);
+				if ($return_status === 0 && is_string($mime) && preg_match($regexp, $mime, $matches))
+				{
+					$this->file_type = $matches[1];
+					return;
+				}
+			}
+
+			if ( (bool) @ini_get('safe_mode') === FALSE && function_exists('shell_exec'))
+			{
+				$mime = @shell_exec($cmd);
+				if (strlen($mime) > 0)
+				{
+					$mime = explode("\n", trim($mime));
+					if (preg_match($regexp, $mime[(count($mime) - 1)], $matches))
+					{
+						$this->file_type = $matches[1];
+						return;
+					}
+				}
+			}
+
+			if (function_exists('popen'))
+			{
+				$proc = @popen($cmd, 'r');
+				if (is_resource($proc))
+				{
+					$mime = @fread($proc, 512);
+					@pclose($proc);
+					if ($mime !== FALSE)
+					{
+						$mime = explode("\n", trim($mime));
+						if (preg_match($regexp, $mime[(count($mime) - 1)], $matches))
+						{
+							$this->file_type = $matches[1];
+							return;
+						}
+					}
+				}
+			}
+		}
+
+		// Fall back to the deprecated mime_content_type(), if available (still better than $_FILES[$field]['type'])
 		if (function_exists('mime_content_type'))
 		{
 			$this->file_type = @mime_content_type($file['tmp_name']);
-			return;
-		}
-
-		/* This is an ugly hack, but UNIX-type systems provide a native way to detect the file type,
-		 * which is still more secure than depending on the value of $_FILES[$field]['type'].
-		 *
-		 * Notes:
-		 *	- a 'W' in the substr() expression bellow, would mean that we're using Windows
-		 *	- many system admins would disable the exec() function due to security concerns, hence the function_exists() check
-		 */
-		if (DIRECTORY_SEPARATOR !== '\\' && function_exists('exec'))
-		{
-			$output = array();
-			@exec('file --brief --mime-type ' . escapeshellarg($file['tmp_path']), $output, $return_code);
-			if ($return_code === 0 && strlen($output[0]) > 0) // A return status code != 0 would mean failed execution
+			if (strlen($this->file_type) > 0) // It's possible that mime_content_type() returns FALSE or an empty string
 			{
-				$this->file_type = rtrim($output[0]);
 				return;
 			}
 		}
