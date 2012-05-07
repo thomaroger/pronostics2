@@ -15,7 +15,7 @@ class Login extends CI_Controller {
     if(!empty($fail)){
       $data["fail"] = 1;
     }
-	  $data['isAjax'] = $this->input->isAjax();
+	    $data['isAjax'] = $this->input->isAjax();
 		$this->load->view('loginTemplate', $data);
 	}
 	

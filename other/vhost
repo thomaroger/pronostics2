@@ -1,0 +1,9 @@
+<virtualhost *:80>
+    ServerName pronostics2
+
+    DocumentRoot "/var/local/webroot/pronostics2/"
+    DirectoryIndex index.php
+    RewriteEngine on
+    RewriteCond $1 !^(index\.php|/js|/css|/assets|/img|images|robots\.txt)
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+</virtualhost>

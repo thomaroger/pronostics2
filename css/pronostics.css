@@ -1,0 +1,56 @@
+#login form {
+    margin: 0px;
+}
+#login .row-fluid .span4 {
+    margin : 0 auto; 
+    float: none;
+    border : solid 1px #EEEEEE;
+}
+
+#login legend {
+    margin-bottom:10px;
+}
+
+#login legend span {
+    margin-left: 40px;    
+}    
+
+#login .control-group {
+  margin-top: 18px;
+  text-align:center;
+}
+
+#login label {
+    text-align : left;
+    margin-left : 40px;
+}
+
+#login .form-actions{
+    margin-bottom:0px;    
+}
+
+#login .form-actions input{
+    margin-left:20px;
+}
+
+#login .form-actions a {
+    margin-left: 48px;
+}
+
+#login .alert {
+    margin-bottom: 0px;
+    text-align:center;
+}
+
+#championship table a {
+    color: #333333;
+}
+#championship table a:hover{
+    color: #005580;
+}
+
+#championship .row-fluid [class*="span"],
+#day .row-fluid [class*="span"] {
+  margin-left: 0;
+  margin-bottom : 10px;
+}

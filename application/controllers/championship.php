@@ -3,8 +3,7 @@
 class Championship extends CI_Controller {
 
 
-	public function index()
-	{
+	public function index(){
     $ticket = $this->input->cookie('ticket');
     $user = Modeluser::getUser($ticket);
     if($user === false){
@@ -12,7 +11,11 @@ class Championship extends CI_Controller {
     }
     
     $championships = $this->modelChampionship->getChampionships($user);
-    var_dump($championships);
+    $data = array('user' => $user,
+                  'championships' => $championships,
+                  'isAjax' => $this->input->isAjax());
+                           
+    $this->load->view('championshipTemplate', $data);
   }
 }
 

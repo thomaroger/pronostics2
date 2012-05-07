@@ -2,7 +2,7 @@
 class Modeluser extends CI_MODEL {
     
     const KEY = "0mT1aH2tO3hM4iA5eS6uR7rO8oG9gE0eR1r"; 
-    
+    const ADMIN = 1;
     public function checkSignin($email, $password){
       $where = array('User_Email' => $email,
                      'User_Password' => md5($password));
