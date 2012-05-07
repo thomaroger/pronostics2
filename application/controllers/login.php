@@ -6,9 +6,9 @@ class Login extends CI_Controller {
 	{
 	  $ticket = $this->input->cookie('ticket');
 	  $user = Modeluser::getUser($ticket);
-    if($user !== false){
-      redirect('/championship');
-    }
+      if($user !== false){
+          redirect('/championship');
+      }
     
     $data = array();
     $fail = $this->uri->segment(2);

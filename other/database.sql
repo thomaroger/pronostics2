@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le : Lun 07 Mai 2012 à 10:54
+-- Généré le : Lun 07 Mai 2012 à 17:39
 -- Version du serveur: 5.0.91
 -- Version de PHP: 5.3.10
 
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `Day` (
 --
 
 INSERT INTO `Day` (`Day_Id`, `Championship_Id`, `Day_Name`, `Day_Prognosis_Begin`, `Day_Prognosis_End`, `Day_Status`) VALUES
-(1, 1, '11e Journee', '2012-05-07 00:00:00', '2012-05-07 18:59:59', 0);
+(1, 1, '11e Journee', '2012-05-07 00:00:00', '2012-05-07 16:59:59', 1);
 
 -- --------------------------------------------------------
 
@@ -156,23 +156,23 @@ CREATE TABLE IF NOT EXISTS `Prognosis` (
   PRIMARY KEY  (`Prognosis_Id`),
   KEY `fk_Prognosis_Game1` (`Game_Id`),
   KEY `fk_Prognosis_User1` (`User_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=71 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=141 ;
 
 --
 -- Contenu de la table `Prognosis`
 --
 
 INSERT INTO `Prognosis` (`Prognosis_Id`, `Game_Id`, `User_Id`, `Prognosis_Team1`, `Prognosis_Team2`, `Prognosis_Win`) VALUES
-(61, 1, 1, '2', '1', 'Saint Etienne'),
-(62, 2, 1, '1', '1', 'nul'),
-(63, 4, 1, '2', '0', 'Sochaux'),
-(64, 5, 1, '0', '3', 'Montpellier'),
-(65, 6, 1, '3', '1', 'Marseille'),
-(66, 7, 1, '1', '0', 'Bordeaux'),
-(67, 8, 1, '0', '1', 'Toulouse'),
-(68, 9, 1, '6', '0', 'Paris SG'),
-(69, 10, 1, '0', '1', 'Rennes'),
-(70, 11, 1, '2', '1', 'Lille');
+(131, 1, 1, '1', '0', 'Saint Etienne'),
+(132, 2, 1, '1', '0', 'Nancy'),
+(133, 4, 1, '1', '1', 'Nul'),
+(134, 5, 1, '1', '3', 'Montpellier'),
+(135, 6, 1, '2', '0', 'Marseille'),
+(136, 7, 1, '1', '1', 'Nul'),
+(137, 8, 1, '0', '1', 'Toulouse'),
+(138, 9, 1, '2', '0', 'Paris SG'),
+(139, 10, 1, '0', '1', 'Rennes'),
+(140, 11, 1, '3', '1', 'Lille');
 
 -- --------------------------------------------------------
 
@@ -189,6 +189,22 @@ CREATE TABLE IF NOT EXISTS `Result` (
   KEY `fk_Result_Game1` (`Game_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `Result`
+--
+
+INSERT INTO `Result` (`Game_Id`, `Result_Team1`, `Result_Team2`, `Result_Win`) VALUES
+(1, '1', '0', 'Saint Etienne'),
+(2, '1', '0', 'Nancy'),
+(4, '1', '1', 'Nul'),
+(5, '1', '3', 'Montpellier'),
+(6, '2', '0', 'Marseille'),
+(7, '1', '1', 'Nul'),
+(8, '0', '1', 'Toulouse'),
+(9, '2', '0', 'Paris SG'),
+(10, '0', '1', 'Rennes'),
+(11, '3', '1', 'Lille');
+
 -- --------------------------------------------------------
 
 --
@@ -203,7 +219,14 @@ CREATE TABLE IF NOT EXISTS `Statistic` (
   PRIMARY KEY  (`Statistic_id`,`User_Id`,`Day_Id`),
   KEY `fk_Statistic_User1` (`User_Id`),
   KEY `fk_Statistic_Day1` (`Day_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Contenu de la table `Statistic`
+--
+
+INSERT INTO `Statistic` (`Statistic_id`, `User_Id`, `Day_Id`, `Statistic_Point`) VALUES
+(2, 1, 1, '14');
 
 -- --------------------------------------------------------
 
@@ -218,6 +241,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `User_Name` varchar(45) default NULL,
   `User_Lastname` varchar(45) default NULL,
   `User_Admin` int(1) NOT NULL default '0',
+  `User_Activity` datetime NOT NULL,
   PRIMARY KEY  (`User_Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -225,8 +249,8 @@ CREATE TABLE IF NOT EXISTS `User` (
 -- Contenu de la table `User`
 --
 
-INSERT INTO `User` (`User_Id`, `User_Email`, `User_Password`, `User_Name`, `User_Lastname`, `User_Admin`) VALUES
-(1, 'thomaroger@gmail.com', 'c5e96090a1095f85b57e85e18d2270b0', 'Thomas', 'ROGER', 1);
+INSERT INTO `User` (`User_Id`, `User_Email`, `User_Password`, `User_Name`, `User_Lastname`, `User_Admin`, `User_Activity`) VALUES
+(1, 'thomaroger@gmail.com', 'c5e96090a1095f85b57e85e18d2270b0', 'Thomas', 'ROGER', 1, '2012-05-07 17:24:19');
 
 --
 -- Contraintes pour les tables exportées

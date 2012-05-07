@@ -2,12 +2,12 @@
     <?php $this->load->view('headerTemplate');?>
 <?php endif; ?>
 
-<?php $this->load->view('menuTemplate');?>
+<?php $this->load->view('backendMenuTemplate');?>
  
 <div class="container-fluid" id="championship">
   <div class="row-fluid">
     <div class="span4">
-        <?php $this->load->view('sidebarTemplate');?> 
+        <?php $this->load->view('backendSidebarTemplate');?> 
     </div>
     <div class="span8">
         <table class="table table-striped table-bordered table-condensed">
@@ -18,32 +18,32 @@
             <th>Name of the day</th>
             <th>End date of prognostic</th>
             <th>Status</th>
-            <th>predictions</th>
+            <th>Result</th>
           </tr>
         </thead>
         <tbody>
             <?php foreach($championships as $championship) :?>
                 <?php 
                     $label = 'label-important';
-                    if ($championship->Day_Status == Modelday::ACTIF ){
+                    if ($championship->Day_Status == Modelchampionship::ACTIF ){
                        $label = 'label-success';  
                     }
                 ?>
                <tr>
                     <td>
-                         <?php echo anchor('day/'.$championship->Day_Id,$championship->Championship_Name); ?>
+                         <?php echo anchor('backend/result/'.$championship->Day_Id,$championship->Championship_Name); ?>
                     </td>
                     <td>
-                        <?php echo anchor('day/'.$championship->Day_Id, $championship->GameType_Name); ?>
+                        <?php echo anchor('backend/result/'.$championship->Day_Id, $championship->GameType_Name); ?>
                     </td>
                     <td>
-                        <?php echo anchor('day/'.$championship->Day_Id, $championship->Day_Name); ?>
+                        <?php echo anchor('backend/result/'.$championship->Day_Id, $championship->Day_Name); ?>
                     </td>
                     <td><?php echo $championship->Day_Prognosis_End ?></td>
                     <td><span class="label <?php echo $label ?>"><?php echo Modelchampionship::$statuses[$championship->Day_Status] ?></span></td>
                     <td>
-                        <?php if(Modelprognosis::checkPrognosis($championship->Day_Id, $user->User_Id)) : ?>
-                            <i class="icon-ok"></i>
+                        <?php if(Modelresult::checkPrognosis($championship->Day_Id)) : ?>
+                            <i class="icon-ok-sign"></i>
                         <?php endif; ?>
                     </td> 
                 </tr>  

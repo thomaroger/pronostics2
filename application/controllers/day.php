@@ -41,6 +41,9 @@ class Day extends CI_Controller {
     			$this->db->where($insert);
 		        $this->db->update('Prognosis', $update); 
 		        $data["status"] = 'updated'; 
+		        
+		        $this->db->where(array('User_Id' => $user->User_Id));
+		        $this->db->update('User', array('User_Activity' => date("Y-m-d H:i:s", time()))); 
 		    }                
         }
     }
