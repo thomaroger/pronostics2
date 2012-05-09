@@ -50,7 +50,8 @@
 }
 
 #championship .row-fluid [class*="span"],
-#day .row-fluid [class*="span"] {
+#day .row-fluid [class*="span"],
+#gameType .row-fluid [class*="span"]  {
   margin-left: 0;
   margin-bottom : 10px;
 }

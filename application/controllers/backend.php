@@ -74,5 +74,52 @@ class Backend extends CI_Controller {
       
     $this->load->view('backendDayTemplate', $data);
   }
+  
+  public function typeGames(){
+     $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    if(!empty($_POST)){ 
+        $this->db->insert('GameType', $_POST['gameType']); 
+        $data['status'] = 'insert';
+    }
+    
+    $query = $this->db->get('GameType');
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['gameTypes'] = $query->result();
+    $this->load->view('backendGameTypeTemplate', $data);
+  }
+  
+  public function championships(){
+     $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    if(!empty($_POST)){ 
+        $this->db->insert('Championship', $_POST['championship']); 
+        $data['status'] = 'insert';
+    }
+    $query = $this->db->from('Championship');
+    $this->db->join('GameType', ' GameType.GameType_Id = Championship.GameType_Id');
+    $query = $this->db->get();
+    
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['championships'] = $query->result();
+    
+    $query = $this->db->get('GameType');
+    $data['gameTypes'] = $query->result();
+    $this->load->view('backendChampionshiptemplate.php', $data);
+  }
 }
 
