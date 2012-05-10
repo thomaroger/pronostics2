@@ -48,4 +48,16 @@ class Modeluser extends CI_MODEL {
       $ticket = $user->User_Id.":".md5($user->User_Id.''.$user->User_Lastname.''.$user->User_Email.''.self::KEY);
       return $ticket;
     }
+    
+    public static function checkAssociationChampionship($userId, $championshipId){
+      $where = array('User_Id' => $userId,
+                     'Championship_Id' => $championshipId);
+      $instUser= new self();
+      $instUser->db->where($where);
+      $query = $instUser->db->get('Championship_has_User');
+      if($query->num_rows() == 1){
+        return true;
+      }
+      return false;
+    }
 }

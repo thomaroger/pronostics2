@@ -121,5 +121,112 @@ class Backend extends CI_Controller {
     $data['gameTypes'] = $query->result();
     $this->load->view('backendChampionshiptemplate.php', $data);
   }
+  
+  
+  public function users(){
+     $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    if(!empty($_POST)){ 
+        $dataUser = $_POST['user'];
+        $dataUser['User_Password'] = md5($dataUser['User_Password']);
+        $this->db->insert('User', $dataUser); 
+        $data['status'] = 'insert';
+    }
+    $query = $this->db->get('User');
+    
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['users'] = $query->result();
+    $this->load->view('backendUsertemplate.php', $data);  
+  }
+  
+  public function userAssociate(){
+     $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+     }
+     $data = array();
+     $data['user'] = $user;
+     if(!empty($_POST['associate']['Championship_Id'])){ 
+        $this->db->where('User_Id', $_POST['associate']['User_Id']);
+        $this->db->delete('Championship_has_User'); 
+        foreach(array_keys($_POST['associate']['Championship_Id']) as $championship){
+          $insert = array('Championship_Id' =>  $championship,
+              'User_Id' => $_POST['associate']['User_Id']);
+          $this->db->insert('Championship_has_User', $insert);   
+        }
+        $data['status'] = 'insert';   
+     }
+     
+     $query = $this->db->get('Championship');
+     $data['championships'] = $query->result();
+     $userId = $this->uri->segment(3);
+        
+     $this->db->where(array('User_Id' => $userId));
+     $query = $this->db->get('User');
+     $userToAssociate = $query->result();
+     $data['userToAssociate'] = $userToAssociate[0];
+     $data['isAjax'] = $this->input->isAjax();
+    
+     $this->load->view('backendAssociateTemplate.php', $data);  
+  }
+  
+  public function days(){
+     $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    if(!empty($_POST)){ 
+        $dataDay = $_POST['day'];
+        $this->db->insert('Day', $dataDay); 
+        $data['status'] = 'insert';
+    }
+    $this->db->from('Day');
+    $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    $query = $this->db->get();
+    $data['days'] = $query->result();
+    $data['user'] = $user;
+    $query = $this->db->get('Championship');
+    $data['championships'] = $query->result();
+    $data['isAjax'] = $this->input->isAjax();
+    $this->load->view('backendDaystemplate.php', $data);
+  }
+  
+  public function games(){
+      $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    if(!empty($_POST)){ 
+        $dataGame = $_POST['game'];
+        $this->db->insert('Game', $dataGame); 
+        $data['status'] = 'insert';
+    }
+    $this->db->from('Game');
+    $this->db->join('Day', ' Day.Day_id = Game.Day_Id', 'left');
+    $query = $this->db->get();
+    $data['games'] = $query->result();
+    $data['user'] = $user;
+    $query = $this->db->get('Day');
+    $data['days'] = $query->result();
+    $data['isAjax'] = $this->input->isAjax();
+    $this->load->view('backendGamestemplate.php', $data); 
+  }
 }
 

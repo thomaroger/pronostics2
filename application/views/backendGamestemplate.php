@@ -4,7 +4,7 @@
 
 <?php $this->load->view('backendMenuTemplate');?>
  
-<div class="container-fluid" id="championship">
+<div class="container-fluid" id="game">
   <div class="row-fluid">
     <div class="span4">
         <?php $this->load->view('backendSidebarTemplate');?> 
@@ -12,31 +12,31 @@
     <div class="span8">
         
     <form class="well form-horizontal" method="post">
-        <h3> Add a championship </h3>
+        <h3> Add a Game </h3>
           <div class="control-group">
-            <label for="name" class="control-label">Name :</label>
+            <label for="gameType" class="control-label">Name of the day :</label>
             <div class="controls">
-              <input type="text" name="championship[Championship_Name]" id="name" class="input-xlarge">
-            </div>
-          </div>
-          <div class="control-group">
-            <label for="gameType" class="control-label">Type of Game :</label>
-            <div class="controls">
-              <select name="championship[GameType_Id]"  id="gameType">
-                <?php foreach ($gameTypes as $gameType) : ?>
-                        <option value="<?php echo $gameType->GameType_Id ?>"><?php echo $gameType->GameType_Name ?></option>
+              <select name="game[day_Id]"  id="gameType" class="span6">
+                <?php foreach ($days as $day) : ?>
+                        <option value="<?php echo $day->Day_Id ?>"><?php echo $day->Day_Name ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
           </div>
          <div class="control-group">
-            <label for="begin" class="control-label">Date :</label>
+            <label for="name1" class="control-label">Team 1 :</label>
             <div class="controls">
-              <input type="text" id="begin" name="championship[Championship_Begin]" class="input-xlarge" placeholder='yyyy-mm-jj (ex:2011-10-03)' required>
+              <input type="text" name="game[Game_Team1]" id="name1" class="input-xlarge">
+            </div>
+          </div>
+          <div class="control-group">
+            <label for="name2" class="control-label">Team 2:</label>
+            <div class="controls">
+              <input type="text" name="game[Game_Team2]" id="name2" class="input-xlarge">
             </div>
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Add</button>
+             <button class="btn btn-primary" type="submit">Add</button>
           </div>
 
         <?php if (!empty($status) && $status == 'insert') : ?>
@@ -49,22 +49,22 @@
         <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
-            <th>Type of Sport</th>
-            <th>Name</th>
-            <th>Date</th>
+            <th>Name of the day</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
           </tr>
         </thead>
         <tbody>
-            <?php foreach($championships as $championship) :?>
-               <tr>
+            <?php foreach($games as $game) :?>
+                <tr>
                     <td>
-                         <?php echo $championship->GameType_Name ?>
+                         <?php echo $game->Day_Name  ?>
                     </td>
                     <td>
-                         <?php echo $championship->Championship_Name ?>
+                         <?php echo $game->Game_Team1  ?>
                     </td>
                     <td>
-                         <?php echo $championship->Championship_Begin ?>
+                         <?php echo $game->Game_Team2 ?>
                     </td>
                 </tr>  
             <?php endforeach;?>
