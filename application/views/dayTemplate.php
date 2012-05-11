@@ -44,8 +44,13 @@
       </div>
       <?php endif; ?>
       <input type="hidden" name="pronos[dayId]" value="<?php echo $day->Day_Id?>" />
-      <?php if($day->Day_Status == Modelday::ACTIF || date("Y-m-d H:i:s", time()) < $day->Day_Prognosis_End  ) : ?>
-      <input type="submit" class="btn-primary" value="Submit" />*
+      <?php if(date("Y-m-d H:i:s", time()) < $day->Day_Prognosis_End ) : ?>
+      <input type="submit" class="btn-primary" value="Submit" />
+      <?php else: ?>
+         <div class="alert alert-error">
+          <h4 class="alert-heading">Warning !</h4>
+          your predictions can't be recording ! The end of the day is passed ! 
+      </div> 
       <?php endif; ?>
   </div>
   </div>

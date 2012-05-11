@@ -35,8 +35,9 @@ class Modelresult extends CI_MODEL {
               if($pronostic->Prognosis_Win == $result[0]->Result_Win){
                  $point = self::PTS_SAME_WINNER;  
               }
-              $isSameScore = $pronostic->Prognosis_Team2 == $result[0]->Result_Team1 && $pronostic->Prognosis_Team2 == $result[0]->Result_Team2; 
-               if($isSameScore){
+              $isSameScore = $pronostic->Prognosis_Team1 == $result[0]->Result_Team1 && $pronostic->Prognosis_Team2 == $result[0]->Result_Team2; 
+        
+              if($isSameScore){
                  $point = self::PTS_SAME_SCORE;
               }
               if(!empty($statistics[$pronostic->User_Id])){
@@ -53,9 +54,9 @@ class Modelresult extends CI_MODEL {
                'Day_id' => $dayId ,
                'Statistic_Point' => $statistic
             );
-
         $this->db->insert('Statistic', $data);
       }
+
   }
 
 }

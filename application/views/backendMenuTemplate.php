@@ -10,6 +10,8 @@
             <li><a href="/backend/championships">Championships</a></li>
             <li><a href="/backend/days">Days</a></li>
             <li><a href="/backend/games">Games</a></li>
+            <li><a href="/backend/predictions">Predictions</a></li>
+            <li><a href="/backend/results">Statistics</a></li>
             <li class="dropdown">
               <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                   <?php echo $user->User_Name. " ".$user->User_Lastname; ?>

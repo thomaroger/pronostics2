@@ -29,5 +29,29 @@ class Modelchampionship extends CI_MODEL {
     $query = $this->db->get();
     return $query->result();
   }
+  
+  public static function getLastChampionship($limit){
+      $results = array();
+      $instChampionship = new self();
+      $instChampionship->db->from('Championship');
+      $instChampionship->db->join('Day', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+      $instChampionship->db->join('Statistic', ' Day.Day_Id = Statistic.Day_Id', 'left');
+      $instChampionship->db->join('User', ' User.User_Id = Statistic.User_Id', 'left');
+      
+      $instChampionship->db->limit($limit); 
+      $query = $instChampionship->db->get();
+      
+      foreach($query->result() as  $championship){
+          $userName = $championship->User_Name." ".$championship->User_Lastname;
+          if($userName != ' '){
+            if(!empty($results[$championship->Championship_Name][$userName])){
+                $results[$championship->Championship_Name][$userName] += (int) $championship->Statistic_Point;
+            } else {
+                $results[$championship->Championship_Name][$userName] = (int) $championship->Statistic_Point;
+            }
+         }    
+      }
+      return $results;
+  }
 }
 ?>

@@ -32,10 +32,16 @@
 <div class="span11">
     <div class="thumbnail">
         <div class="caption">
+            <?php
+                $championships = ModelChampionship::getLastChampionship(5);
+            ?>
             <ul class="nav nav-list">
-                <li class="nav-header">Championship</li>
-                <li><i class="icon-cog"></i> Championnat de France 2011-2012 </a></li>
-                <li>ROGER Thomas 10 pts</li>
+                <?php foreach($championships as $name => $results) : ?>
+                    <li class="nav-header"><?php echo $name ?></li>
+                    <?php foreach($results as $username => $pts) : ?>
+                         <li><?php echo $username.' '.$pts.' pts'; ?></li>
+                     <?php endforeach; ?>   
+                <?php endforeach; ?>
             </ul>
         </div>
     </div>
