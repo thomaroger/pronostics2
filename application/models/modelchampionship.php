@@ -53,5 +53,14 @@ class Modelchampionship extends CI_MODEL {
       }
       return $results;
   }
+  
+  public function getAllChampionships(){
+     $this->db->from('Championship');
+     $this->db->order_by('Championship.Championship_Id ASC'); 
+
+     $query = $this->db->get();
+     return $query->result();
+
+  }
 }
 ?>

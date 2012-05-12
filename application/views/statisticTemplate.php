@@ -10,7 +10,31 @@
        <?php $this->load->view('sidebarTemplate');?> 
     </div>
     <div class="span8">
-      Helloworld
+      
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <?php foreach ($championships as $championship) : ?>
+     <?php if(count($championship['result']) > 1) : ?>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo json_encode($championship['result'])?>);
+        var options = {
+          title: "<?php echo $championship['name'] ?>"
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_<?php echo $championship['id'];?>'));
+        chart.draw(data, options);
+      }
+    </script>
+    
+    <div id="chart_<?php echo $championship['id'];?>" style="width: 900px; height: 500px;"></div>
+    <?php else : ?>
+      No statistics for <?php echo $championship['name']; ?>  !
+    <?php endif; ?>
+    <?php endforeach; ?> 
+      
     </div>
   </div>
 </div>
