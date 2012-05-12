@@ -12,9 +12,11 @@ class Backend extends CI_Controller {
         $championships = $this->modelChampionship->getChampionships($user, true);
         $data = array('user' => $user,
                       'championships' => $championships,
-                      'isAjax' => $this->input->isAjax());
+                      'isAjax' => $this->input->isAjax(),
+                      'action' => 'results');
                                
         $this->load->view('backendTemplate', $data);
+        
   }
   
   public function result(){
@@ -71,6 +73,8 @@ class Backend extends CI_Controller {
     $data['day'] = $day[0];
     $data['games'] = $games;
     $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'results';
+    
       
     $this->load->view('backendDayTemplate', $data);
   }
@@ -93,6 +97,8 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['gameTypes'] = $query->result();
+    $data['action'] = 'typeGames';
+    
     $this->load->view('backendGameTypeTemplate', $data);
   }
   
@@ -116,6 +122,7 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['championships'] = $query->result();
+    $data['action'] = 'championships';
     
     $query = $this->db->get('GameType');
     $data['gameTypes'] = $query->result();
@@ -143,6 +150,7 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['users'] = $query->result();
+    $data['action'] = 'users';
     $this->load->view('backendUsertemplate.php', $data);  
   }
   
@@ -175,7 +183,7 @@ class Backend extends CI_Controller {
      $userToAssociate = $query->result();
      $data['userToAssociate'] = $userToAssociate[0];
      $data['isAjax'] = $this->input->isAjax();
-    
+     $data['action'] = 'users';
      $this->load->view('backendAssociateTemplate.php', $data);  
   }
   
@@ -201,6 +209,7 @@ class Backend extends CI_Controller {
     $query = $this->db->get('Championship');
     $data['championships'] = $query->result();
     $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'days';
     $this->load->view('backendDaystemplate.php', $data);
   }
   
@@ -223,10 +232,58 @@ class Backend extends CI_Controller {
     $query = $this->db->get();
     $data['games'] = $query->result();
     $data['user'] = $user;
-    $query = $this->db->get('Day');
+    $this->db->from('Day');
+    $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    $query = $this->db->get();
     $data['days'] = $query->result();
     $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'games';
     $this->load->view('backendGamestemplate.php', $data); 
   }
+  
+  public function predictions(){
+    $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    $data = array();
+    
+    $this->db->from('Prognosis');
+    $this->db->join('Game', ' Prognosis.Game_Id = Game.Game_id', 'left');
+    $this->db->join('Day', ' Day.Day_id = Game.Day_Id', 'left');
+    $this->db->join('User', ' Prognosis.User_Id = User.User_Id', 'left');
+    $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    $query = $this->db->get();
+    $data['predictions'] = $query->result();
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'predictions';
+    $this->load->view('backendPredictionstemplate.php', $data); 
+     
+  }
+  
+  public function statistics(){
+    $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    $data = array();
+    
+    $this->db->from('Statistic');
+    $this->db->join('Day', ' Statistic.Day_id = Day.Day_Id', 'left');
+    $this->db->join('User', ' Statistic.User_Id = User.User_Id', 'left');
+    $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    $query = $this->db->get();
+    $data['statistics'] = $query->result();
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'statistics';
+    $this->load->view('backendStatisticsBackend.php', $data);
+  }
+  
 }
 

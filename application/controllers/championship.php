@@ -13,7 +13,8 @@ class Championship extends CI_Controller {
     $championships = $this->modelChampionship->getChampionships($user);
     $data = array('user' => $user,
                   'championships' => $championships,
-                  'isAjax' => $this->input->isAjax());
+                  'isAjax' => $this->input->isAjax(),
+                  'action' => 'championship');
                            
     $this->load->view('championshipTemplate', $data);
   }

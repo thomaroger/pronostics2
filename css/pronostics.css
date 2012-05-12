@@ -54,7 +54,9 @@
 #gameType .row-fluid [class*="span"],
 #user .row-fluid [class*="span"],
 #associate .row-fluid [class*="span"],
-#game .row-fluid [class*="span"]  {
+#game .row-fluid [class*="span"],
+#predictions .row-fluid [class*="span"],
+#statistics .row-fluid [class*="span"]{
   margin-left: 0;
   margin-bottom : 10px;
 }

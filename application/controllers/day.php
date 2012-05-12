@@ -58,6 +58,7 @@ class Day extends CI_Controller {
     $data['day'] = $day[0];
     $data['games'] = $games;
     $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'championship';
       
     $this->load->view('dayTemplate', $data);
   }

@@ -18,7 +18,7 @@
             <div class="controls">
               <select name="game[day_Id]"  id="gameType" class="span6">
                 <?php foreach ($days as $day) : ?>
-                        <option value="<?php echo $day->Day_Id ?>"><?php echo $day->Day_Name ?></option>
+                        <option value="<?php echo $day->Day_Id ?>"><?php echo $day->Championship_Name." - ".$day->Day_Name ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
