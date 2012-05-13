@@ -14,7 +14,7 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     
     <?php foreach ($championships as $championship) : ?>
-     <?php if(count($championship['result']) > 1) : ?>
+     <?php if(count($championship['result']) > 3) : ?>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);

@@ -22,6 +22,10 @@ class Account extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'account';
+    
+    $this->db->where(array('User_Id' => $user->User_Id));
+    $this->db->update('User', array('User_Activity' => date("Y-m-d H:i:s", time()))); 
+    
       
     $this->load->view('accountTemplate', $data);
 	}

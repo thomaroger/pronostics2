@@ -60,3 +60,12 @@
   margin-left: 0;
   margin-bottom : 10px;
 }
+
+
+.backendSideBar {
+  padding-bottom: 0px;
+}
+
+.backendSideBar .form-actions{
+  margin-bottom : 0px;
+}

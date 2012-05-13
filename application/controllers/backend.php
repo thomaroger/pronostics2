@@ -13,8 +13,7 @@ class Backend extends CI_Controller {
         $data = array('user' => $user,
                       'championships' => $championships,
                       'isAjax' => $this->input->isAjax(),
-                      'action' => 'results');
-                               
+                      'action' => 'results');                   
         $this->load->view('backendTemplate', $data);
         
   }
@@ -117,6 +116,11 @@ class Backend extends CI_Controller {
     }
     $query = $this->db->from('Championship');
     $this->db->join('GameType', ' GameType.GameType_Id = Championship.GameType_Id');
+    
+    if(!empty($_GET['filters']['GameType']) && $_GET['filters']['GameType'] > 0){
+      $this->db->where(array('GameType.GameType_Id' => $_GET['filters']['GameType']));
+    }
+    
     $query = $this->db->get();
     
     $data['user'] = $user;
@@ -125,7 +129,15 @@ class Backend extends CI_Controller {
     $data['action'] = 'championships';
     
     $query = $this->db->get('GameType');
-    $data['gameTypes'] = $query->result();
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->GameType_Id] = $result->GameType_Name;
+    }
+    $data['filters'][] = array('Name' => 'GameType',
+                               'Label' => 'Type Of Games', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+    
     $this->load->view('backendChampionshiptemplate.php', $data);
   }
   
@@ -203,6 +215,11 @@ class Backend extends CI_Controller {
     }
     $this->db->from('Day');
     $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    
+    if(!empty($_GET['filters']['Championship']) && $_GET['filters']['Championship'] > 0){
+      $this->db->where(array('Championship.Championship_Id' => $_GET['filters']['Championship']));
+    }
+    
     $query = $this->db->get();
     $data['days'] = $query->result();
     $data['user'] = $user;
@@ -210,6 +227,17 @@ class Backend extends CI_Controller {
     $data['championships'] = $query->result();
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'days';
+    
+    $query = $this->db->get('Championship');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Championship_Id] = $result->Championship_Name;
+    }
+    $data['filters'][] = array('Name' => 'Championship',
+                               'Label' => 'Championship', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+    
     $this->load->view('backendDaystemplate.php', $data);
   }
   
@@ -229,6 +257,19 @@ class Backend extends CI_Controller {
     }
     $this->db->from('Game');
     $this->db->join('Day', ' Day.Day_id = Game.Day_Id', 'left');
+    $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    
+    $where = array();
+    if(!empty($_GET['filters']['Championship']) && $_GET['filters']['Championship'] > 0){
+      $where['Championship.Championship_Id'] = $_GET['filters']['Championship'];
+    }
+    if(!empty($_GET['filters']['Day']) && $_GET['filters']['Day'] > 0){
+      $where['Game.Day_Id'] = $_GET['filters']['Day'];
+    }
+    if(!empty($where)){
+      $this->db->where($where);
+    }
+  
     $query = $this->db->get();
     $data['games'] = $query->result();
     $data['user'] = $user;
@@ -238,6 +279,28 @@ class Backend extends CI_Controller {
     $data['days'] = $query->result();
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'games';
+    
+    $query = $this->db->get('Championship');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Championship_Id] = $result->Championship_Name;
+    }
+    $data['filters'][] = array('Name' => 'Championship',
+                               'Label' => 'Championship', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+                               
+    $query = $this->db->get('Day');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Day_Id] = $result->Day_Name;
+    }
+    $data['filters'][] = array('Name' => 'Day',
+                               'Label' => 'Day', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+                               
+    
     $this->load->view('backendGamestemplate.php', $data); 
   }
   
@@ -255,11 +318,57 @@ class Backend extends CI_Controller {
     $this->db->join('Day', ' Day.Day_id = Game.Day_Id', 'left');
     $this->db->join('User', ' Prognosis.User_Id = User.User_Id', 'left');
     $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    
+    $where = array();
+    if(!empty($_GET['filters']['Championship']) && $_GET['filters']['Championship'] > 0){
+      $where['Championship.Championship_Id'] = $_GET['filters']['Championship'];
+    }
+    if(!empty($_GET['filters']['Day']) && $_GET['filters']['Day'] > 0){
+      $where['Game.Day_Id'] = $_GET['filters']['Day'];
+    }
+    if(!empty($_GET['filters']['User']) && $_GET['filters']['User'] > 0){
+      $where['Prognosis.User_id'] = $_GET['filters']['User'];
+    }
+    if(!empty($where)){
+      $this->db->where($where);
+    }
+    
     $query = $this->db->get();
     $data['predictions'] = $query->result();
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'predictions';
+    
+    $query = $this->db->get('Championship');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Championship_Id] = $result->Championship_Name;
+    }
+    $data['filters'][] = array('Name' => 'Championship',
+                               'Label' => 'Championship', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+                               
+    $query = $this->db->get('Day');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Day_Id] = $result->Day_Name;
+    }
+    $data['filters'][] = array('Name' => 'Day',
+                               'Label' => 'Day', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+     
+    $query = $this->db->get('User');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->User_Id] = $result->User_Name.' '.$result->User_Lastname;
+    }
+    $data['filters'][] = array('Name' => 'User',
+                               'Label' => 'User', 
+                               'Values' => $values,
+                               'Type' => 'Select');                          
+    
     $this->load->view('backendPredictionstemplate.php', $data); 
      
   }
@@ -277,11 +386,57 @@ class Backend extends CI_Controller {
     $this->db->join('Day', ' Statistic.Day_id = Day.Day_Id', 'left');
     $this->db->join('User', ' Statistic.User_Id = User.User_Id', 'left');
     $this->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
+    
+    $where = array();
+    if(!empty($_GET['filters']['Championship']) && $_GET['filters']['Championship'] > 0){
+      $where['Championship.Championship_Id'] = $_GET['filters']['Championship'];
+    }
+    if(!empty($_GET['filters']['Day']) && $_GET['filters']['Day'] > 0){
+      $where['Day.Day_Id'] = $_GET['filters']['Day'];
+    }
+    if(!empty($_GET['filters']['User']) && $_GET['filters']['User'] > 0){
+      $where['User.User_id'] = $_GET['filters']['User'];
+    }
+    if(!empty($where)){
+      $this->db->where($where);
+    }
+    
     $query = $this->db->get();
     $data['statistics'] = $query->result();
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'statistics';
+    
+    $query = $this->db->get('Championship');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Championship_Id] = $result->Championship_Name;
+    }
+    $data['filters'][] = array('Name' => 'Championship',
+                               'Label' => 'Championship', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+                               
+    $query = $this->db->get('Day');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->Day_Id] = $result->Day_Name;
+    }
+    $data['filters'][] = array('Name' => 'Day',
+                               'Label' => 'Day', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+     
+    $query = $this->db->get('User');
+    $values = array('0' => 'All');
+    foreach ($query->result() as $result){
+      $values[$result->User_Id] = $result->User_Name.' '.$result->User_Lastname;
+    }
+    $data['filters'][] = array('Name' => 'User',
+                               'Label' => 'User', 
+                               'Values' => $values,
+                               'Type' => 'Select');
+    
     $this->load->view('backendStatisticsBackend.php', $data);
   }
   

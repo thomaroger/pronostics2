@@ -61,4 +61,13 @@ class Modeluser extends CI_MODEL {
       }
       return false;
     }
+    
+    public static function getLastSignin($limit){
+      $instDay = new self();
+       $instDay->db->from('User');
+       $instDay->db->order_by("User.User_Activity DESC"); 
+       $instDay->db->limit($limit); 
+       $query = $instDay->db->get();
+       return $query->result();
+    }
 }

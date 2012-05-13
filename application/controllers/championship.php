@@ -15,7 +15,10 @@ class Championship extends CI_Controller {
                   'championships' => $championships,
                   'isAjax' => $this->input->isAjax(),
                   'action' => 'championship');
-                           
+    
+    $this->db->where(array('User_Id' => $user->User_Id));
+    $this->db->update('User', array('User_Activity' => date("Y-m-d H:i:s", time()))); 
+    		                               
     $this->load->view('championshipTemplate', $data);
   }
 }

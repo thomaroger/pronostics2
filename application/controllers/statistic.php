@@ -45,6 +45,13 @@ class Statistic extends CI_Controller {
        
        $cpt ++;
        
+       $result[$cpt][] = '';
+       foreach($usersAssociate as $userAssociate){
+        $result[$cpt][] = 0;
+       }
+       
+       $cpt ++;
+       
        foreach($days as $day){
         $result[$cpt][] = $day->Day_Name;
         foreach($usersAssociate as $userAssociate){
@@ -54,18 +61,30 @@ class Statistic extends CI_Controller {
           $this->db->where($where);
           $query = $this->db->get();
           $resultUser = $query->result();
-          $result[$cpt][] = (int) $resultUser[0]->Statistic_Point;
+          if(!empty($resultUser)){
+            $result[$cpt][] = (int) $resultUser[0]->Statistic_Point;
+          }else{
+            $result[$cpt][] = 0;
+          }
+          
         }
         $cpt ++;
        }
        
-       
+       $result[$cpt][] = '';
+       foreach($usersAssociate as $userAssociate){
+        $result[$cpt][] = 0;
+       }
        
        $championshipsArray[$championship->Championship_Id]['result'] = $result; 
     }
     
     
     $data['championships'] = $championshipsArray;
+    
+    $this->db->where(array('User_Id' => $user->User_Id));
+    $this->db->update('User', array('User_Activity' => date("Y-m-d H:i:s", time()))); 
+    
       
     $this->load->view('statisticTemplate', $data);
 	}
