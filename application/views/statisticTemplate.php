@@ -29,9 +29,11 @@
       }
     </script>
     
-    <div id="chart_<?php echo $championship['id'];?>" style="width: 900px; height: 500px;"></div>
+    <div id="chart_<?php echo $championship['id'];?>" style="width: 800px; height: 500px;"></div>
     <?php else : ?>
-      No statistics for <?php echo $championship['name']; ?>  !
+      <div id="chart_<?php echo $championship['id'];?>">
+        No statistics for <?php echo $championship['name']; ?>  !
+      </div>    
     <?php endif; ?>
     <?php endforeach; ?> 
       
