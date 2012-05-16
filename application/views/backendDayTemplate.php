@@ -40,7 +40,7 @@
         <?php if (!empty($status) && $status == 'updated') : ?>
       <div class="alert alert-info">
           <h4 class="alert-heading">Congrats !</h4>
-          your predictions are updated
+          your result are updated
       </div>
       <?php endif; ?>
       <input type="hidden" name="pronos[dayId]" value="<?php echo $day->Day_Id?>" />

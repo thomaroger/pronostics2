@@ -49,7 +49,7 @@
         <?php if (!empty($status) && $status == 'insert') : ?>
         <div class="alert alert-success">
           <h4 class="alert-heading">Congrats !</h4>
-          your championship are recorded
+          your day are recorded
         </div>
         <?php endif; ?>
     </form>

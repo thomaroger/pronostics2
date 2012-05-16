@@ -15,7 +15,7 @@
              Associate championship to <?php echo $userToAssociate->User_Name; ?> <?php echo $userToAssociate->User_Lastname; ?>         
          </h3>
           <?php echo anchor('backend/users', "<i class='icon-step-backward'></i> Return to users"); ?> 
-          <form></form>
+         <table class="table table-striped table-bordered table-condensed"></table>
          <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
@@ -40,7 +40,7 @@
       <?php if (!empty($status) && $status == 'insert') : ?>
       <div class="alert alert-success">
           <h4 class="alert-heading">Congrats !</h4>
-          your predictions are recorded
+          your associations are recorded
       </div>
       <?php endif; ?>
       <input type="hidden" name="associate[User_Id]" value="<?php echo $userToAssociate->User_Id?>" />
