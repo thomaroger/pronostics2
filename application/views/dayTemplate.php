@@ -49,7 +49,7 @@
       <?php else: ?>
          <div class="alert alert-error">
           <h4 class="alert-heading">Warning !</h4>
-          your predictions can't be recording ! The end of the day is passed ! 
+          The end of the day is passed ! 
       </div> 
       <?php endif; ?>
   </div>
