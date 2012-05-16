@@ -32,7 +32,7 @@
             </div>
             <div class="form-actions center">
                 <input type="submit" value="Sign in" class="btn btn-primary">
-                <a href="/user/requestPassword">Forgot password?</a>                    
+                <a href="#">Forgot password?</a>                    
             </div>
             
           <?php if(!empty($fail)) : ?>

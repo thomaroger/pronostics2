@@ -10,10 +10,12 @@ class Day extends CI_Controller {
       redirect('/login/fail');  
     }
     $data = array();
-
+    $dayId = $this->uri->segment(2);
+    $day = $this->modelDay->getDay($dayId);
     if(!empty($_POST)){    
         $pronostics = $_POST['pronos'];
-        if(date("Y-m-d H:i:s", time()) < $day->Day_Prognosis_End ) {
+        
+        if(date("Y-m-d H:i:s", time()) < $day[0]->Day_Prognosis_End ) {
             $games = $this->modelDay->getGames($pronostics['dayId']);
             foreach($games as $game){
                 $pronostic =$pronostics[$game->Game_Id];
@@ -50,8 +52,7 @@ class Day extends CI_Controller {
         }
     }
     
-    $dayId = $this->uri->segment(2);
-    $day = $this->modelDay->getDay($dayId);
+    
     $games = $this->modelDay->getGames($dayId, $user->User_Id);
     
     $data['user'] = $user;
