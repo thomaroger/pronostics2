@@ -1,7 +1,7 @@
 <?php
 class Modelchampionship extends CI_MODEL {
 
-  const WEEK = 1209600;// 14 days;
+  const WEEK = 2592000;// 30 days;
   const EXPIRED = 1;
   const ACTIF = 0;
   public static $statuses = array(self::EXPIRED => 'expired',
@@ -20,11 +20,10 @@ class Modelchampionship extends CI_MODEL {
         $where = array('Day.Day_Prognosis_End < '=> date("Y-m-d H:i:s", time())); 
     }else{
         $where = array('Championship_has_User.User_Id' => $user->User_Id,
-                       'Day.Day_Prognosis_Begin >' => date("Y-m-d H:i:s", time() - self::WEEK),
                        'Day.Day_Prognosis_End < '=> date("Y-m-d H:i:s", time() + self::WEEK));
     }            
     $this->db->where($where); 
-    $this->db->order_by('Championship.Championship_Id ASC, Day.Day_Id DESC'); 
+    $this->db->order_by('Day.Day_Prognosis_End DESC'); 
 
     $query = $this->db->get();
     return $query->result();
