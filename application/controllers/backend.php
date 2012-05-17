@@ -252,8 +252,19 @@ class Backend extends CI_Controller {
     $data = array();
     if(!empty($_POST)){ 
         $dataGame = $_POST['game'];
-        $this->db->insert('Game', $dataGame); 
-        $data['status'] = 'insert';
+        $teams = array($_POST['game']['Game_Team1'], $_POST['game']['Game_Team2']);
+        $this->db->from('Game');
+        $this->db->where('Day_Id =', $_POST['game']['day_Id']);
+        $this->db->where_in('Game_Team1', $teams);
+        $this->db->or_where_in('Game_Team2', $teams);
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+          $data['status'] = 'fail';
+        }else{
+          $this->db->insert('Game', $dataGame); 
+          $data['status'] = 'insert';
+        }
+        
     }
     $this->db->from('Game');
     $this->db->join('Day', ' Day.Day_id = Game.Day_Id', 'left');
@@ -438,6 +449,32 @@ class Backend extends CI_Controller {
                                'Type' => 'Select');
     
     $this->load->view('backendStatisticsBackend.php', $data);
+  }
+  
+  public function mails(){
+   $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    
+    $data = array();
+    
+    if(!empty($_POST)){ 
+        $dataMail = $_POST['mail'];
+        $this->db->insert('Mail', $dataMail);
+         
+        $data['status'] = 'insert';
+    }
+    
+    $query = $this->db->get('Mail');
+    $data['mails'] = $query->result();
+    $data['user'] = $user;
+    $data['isAjax'] = $this->input->isAjax();
+    $data['action'] = 'mails';
+    $this->load->view('backendMailsBackend.php', $data);
+
   }
   
 }

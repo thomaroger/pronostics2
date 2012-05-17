@@ -11,9 +11,13 @@ class Login extends CI_Controller {
       }
     
     $data = array();
-    $fail = $this->uri->segment(2);
-    if(!empty($fail)){
-      $data["fail"] = 1;
+    $status = $this->uri->segment(2);
+    if(!empty($status)){
+      if($status == 'fail'){
+        $data["fail"] = 1;
+      }else{
+        $data['password'] = 1;
+      }
     }
 	    $data['isAjax'] = $this->input->isAjax();
 		$this->load->view('loginTemplate', $data);
@@ -31,6 +35,12 @@ class Login extends CI_Controller {
     }else{
       redirect('/championship');
     }
+	}
+	
+	public function password(){
+	   var_dump($_POST);
+	   //die();
+	   redirect('/login/password');
 	}
 }
 

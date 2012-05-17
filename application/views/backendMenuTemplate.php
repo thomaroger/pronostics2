@@ -12,6 +12,8 @@
             <li <?php echo $action=='games'?"class='active'":''; ?> ><a href="/backend/games">Games</a></li>
             <li <?php echo $action=='predictions'?"class='active'":''; ?> ><a href="/backend/predictions">Predictions</a></li>
             <li <?php echo $action=='statistics'?"class='active'":''; ?> ><a href="/backend/statistics">Statistics</a></li>
+            <li <?php echo $action=='mails'?"class='active'":''; ?> ><a href="/backend/mails">Mails</a></li>
+            
             <li class="dropdown">
               <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                   <?php echo $user->User_Name. " ".$user->User_Lastname; ?>

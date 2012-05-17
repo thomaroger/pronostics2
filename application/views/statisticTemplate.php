@@ -30,10 +30,6 @@
     </script>
     
     <div id="chart_<?php echo $championship['id'];?>" style="width: 800px; height: 500px;"></div>
-    <?php else : ?>
-      <div id="chart_<?php echo $championship['id'];?>">
-        No statistics for <?php echo $championship['name']; ?>  !
-      </div>    
     <?php endif; ?>
     <?php endforeach; ?> 
       

@@ -45,6 +45,13 @@
           your game are recorded
         </div>
         <?php endif; ?>
+        <?php if (!empty($status) && $status == 'fail') : ?>
+        <div class="alert alert-error">
+          <h4 class="alert-heading">Error !</h4>
+          your game are not recorded because one of the team has already a game !
+        </div>
+        <?php endif; ?>
+        
     </form>
         <table class="table table-striped table-bordered table-condensed">
         <thead>

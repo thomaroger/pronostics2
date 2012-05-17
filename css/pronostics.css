@@ -69,3 +69,30 @@
 .backendSideBar .form-actions{
   margin-bottom : 0px;
 }
+
+
+.accordion-group, .accordion {
+  margin :0;
+  border : 0;
+}
+
+.accordion-group {
+  padding-left: 30px;
+}
+
+.accordion-body {
+  padding-left : 15px;
+}
+
+.accordion-heading .accordion-toggle {
+  padding :0px 15px;
+}
+
+
+#modelday ul {
+  margin: 0px;
+}
+
+#myModal form {
+  margin: 0px;
+}

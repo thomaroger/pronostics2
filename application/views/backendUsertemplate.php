@@ -66,7 +66,7 @@
             <th>Lastname </th>
             <th>Admin </th>
             <th>Activity </th>
-            <th></th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -90,7 +90,10 @@
                          <?php echo $userback->User_Activity ?>
                     </td>
                     <td>
-                         <?php echo anchor('backend/userAssociate/'.$userback->User_Id, "<i class='icon-tags'></i> Associate"); ?>
+                         <ul class="unstyled">
+                            <li><?php echo anchor('backend/userAssociate/'.$userback->User_Id, "<i class='icon-tags'></i> Associate"); ?></li>
+                            <li><?php echo anchor('backend/userAssociate/'.$userback->User_Id, "<i class='icon-user '></i> Pretenting to be"); ?></li>
+                         </ul>
                     </td>
                 </tr>  
             <?php endforeach;?>

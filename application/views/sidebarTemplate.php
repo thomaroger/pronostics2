@@ -13,19 +13,27 @@
 </div>
 <div class="span11">
     <div class="thumbnail">
-        <div class="caption"><ul>
+        <div class="caption accordion" id="modelday">
+        <ul class="nav nav-list"><li class="nav-header">Last Days</li></ul>
+        <ul><div>
 <?php
     $days = ModelDay::getLastDays(5);
     $dayId = 0;
     foreach($days as $day):  
           if($dayId != $day->Day_Id): 
             $dayId = $day->Day_Id;
-            ?>
-            </ul><ul class="nav nav-list">
-                <li class="nav-header"><?php echo $day->Day_Name; ?></li>
+            ?></div></ul>
+            <ul class="nav nav-list accordion-group">
+                <li class="nav-header accordion-heading" >
+                  <a class="accordion-toggle" href="#model<?php echo $day->Day_Id;?>" data-parent="#modelday" data-toggle="collapse">
+                    <?php echo $day->Day_Name; ?>
+                  </a>
+                </li>
+                <div id="model<?php echo $day->Day_Id;?>" class="accordion-body in collapse">
           <?php endif; ?>
            <li><?php echo $day->User_Name.' '.$day->User_Lastname.' '.$day->Statistic_Point.' pts' ; ?></li>
 <?php  endforeach; ?>
+      </div>
         </div>
     </div>
 </div>

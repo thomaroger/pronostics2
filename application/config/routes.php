@@ -40,6 +40,7 @@
 
 $route['default_controller'] = "login";
 $route['login/fail'] = "login";
+$route['login/password'] = "login";
 $route['day/:num'] = "day";
 $route['statistics'] = "statistic";
 $route['404_override'] = 'error_404';

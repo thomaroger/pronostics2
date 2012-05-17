@@ -34,7 +34,7 @@ class Statistic extends CI_Controller {
        
        $days = "";
        $this->db->from('Day');
-       $this->db->where(array('Day.Championship_Id' => $championship->Championship_Id));
+       $this->db->where(array('Day.Championship_Id' => $championship->Championship_Id, 'Day.Day_Status' => Modelchampionship::EXPIRED));
        $query = $this->db->get();
        $days = $query->result();
        
