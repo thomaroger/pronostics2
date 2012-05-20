@@ -477,5 +477,22 @@ class Backend extends CI_Controller {
 
   }
   
+  public function pretendToBe(){
+    $ticket = $this->input->cookie('ticket');
+     $user = Modeluser::getUser($ticket, false);
+
+     if($user === false || $user->User_Admin ==0){
+        redirect('/login/fail');  
+    }
+    $userId = $this->uri->segment(3);
+    $where = array('User_Id' => $userId);
+    $this->db->where($where);
+    $query = $this->db->get('User');
+    if($query->num_rows() == 1){
+      $this->modelUser->setCookie($query);
+    }
+    redirect('/');
+  }
+  
 }
 

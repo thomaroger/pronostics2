@@ -34,13 +34,21 @@ class Modelday extends CI_MODEL {
       return $query->result();
   }
 
-  public static function getLastDays($limit){
+  public static function getLastDays($user, $limit = 5){
        $instDay = new self();
        $instDay->db->from('Day');
        $instDay->db->join('Statistic', ' Statistic.Day_Id = Day.Day_Id', 'left'); 
+       $instDay->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
        $instDay->db->join('User', ' Statistic.User_Id = User.User_Id', 'left');
-       $instDay->db->where('Day.Day_Status',self::EXPIRED);
+       $instDay->db->join('Championship_has_User', ' Championship_has_User.Championship_Id = Championship.Championship_Id');
+       
+       $where = array('Day.Day_Status' => self::EXPIRED, 
+                      'Championship_has_User.User_Id' => $user->User_Id);
+                      
+       $instDay->db->where($where);
+       
        $instDay->db->order_by("Day.Day_Id DESC, Statistic.Statistic_Point DESC"); 
+       
        $instDay->db->limit($limit); 
        $query = $instDay->db->get();
        return $query->result();

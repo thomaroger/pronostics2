@@ -92,7 +92,7 @@
                     <td>
                          <ul class="unstyled">
                             <li><?php echo anchor('backend/userAssociate/'.$userback->User_Id, "<i class='icon-tags'></i> Associate"); ?></li>
-                            <li><?php echo anchor('backend/userAssociate/'.$userback->User_Id, "<i class='icon-user '></i> Pretenting to be"); ?></li>
+                            <li><?php echo anchor('backend/pretendToBe/'.$userback->User_Id, "<i class='icon-user '></i> Pretenting to be"); ?></li>
                          </ul>
                     </td>
                 </tr>  

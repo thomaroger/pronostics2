@@ -17,7 +17,7 @@
         <ul class="nav nav-list"><li class="nav-header">Last Days</li></ul>
         <ul><div>
 <?php
-    $days = ModelDay::getLastDays(5);
+    $days = ModelDay::getLastDays($user);
     $dayId = 0;
     foreach($days as $day):  
           if($dayId != $day->Day_Id): 
@@ -41,7 +41,7 @@
     <div class="thumbnail">
         <div class="caption">
             <?php
-                $championships = ModelChampionship::getLastChampionship(5);
+                $championships = ModelChampionship::getLastChampionship($user);
             ?>
             <ul class="nav nav-list">
                 <?php foreach($championships as $name => $results) : ?>

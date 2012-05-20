@@ -70,4 +70,14 @@ class Modeluser extends CI_MODEL {
        $query = $instDay->db->get();
        return $query->result();
     }
+    
+    public function generatePassword($limit = 8){
+      $list = "a1ze3rt2yu4io5pq6sd7fg8hj9kl0mw2xc3vb4n";
+      mt_srand((double)microtime()*1000000);
+      $password = "";
+      while( strlen($password)< $limit ) {
+        $password .= $list[mt_rand(0, strlen($list)-1)];
+	 	  }
+      return $password;
+    }
 }

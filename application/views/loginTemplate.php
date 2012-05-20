@@ -38,7 +38,7 @@
               <div class="alert alert-error">Error when login</div>
           <?php endif; ?>
           <?php if(!empty($password)) : ?>
-              <div class="alert alert-success">Your password will be sent in your mail box !(Not Yet)</div>
+              <div class="alert alert-success">Your password will be sent in your mail box !</div>
           <?php endif; ?>
         </fieldset>
         </form>
@@ -51,7 +51,7 @@
     <button class="close" data-dismiss="modal">×</button>
     <h3>Forgot password ?</h3>
   </div>
-  <?php echo form_open("/login/password"); ?>
+  <?php echo form_open("/login/generatePassword"); ?>
   <div class="modal-body">
     <div class="control-group">
       <label class="control-label" for="signin_username">Email :</label>

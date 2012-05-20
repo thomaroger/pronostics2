@@ -21,6 +21,7 @@ class Statistic extends CI_Controller {
     foreach ($championships as $championship){
        
        $result = array();
+       $cumul = array();
        $cpt = 0;
        
        $championshipsArray[$championship->Championship_Id]['name'] = $championship->Championship_Name;
@@ -38,22 +39,22 @@ class Statistic extends CI_Controller {
        $query = $this->db->get();
        $days = $query->result();
        
-       $result[$cpt][] = 'Day';
+       $result[$cpt][] = $cumul[$cpt][] = 'Day';
        foreach($usersAssociate as $userAssociate){
-        $result[$cpt][] = $userAssociate->User_Name.' '.$userAssociate->User_Lastname;
+        $result[$cpt][] = $cumul[$cpt][] =  $userAssociate->User_Name.' '.$userAssociate->User_Lastname;
        }
        
        $cpt ++;
        
-       $result[$cpt][] = '';
+       $result[$cpt][] =  $cumul[$cpt][] =  '';
        foreach($usersAssociate as $userAssociate){
-        $result[$cpt][] = 0;
+        $result[$cpt][] =  $cumul[$cpt][] = 0;
        }
        
        $cpt ++;
        
        foreach($days as $day){
-        $result[$cpt][] = $day->Day_Name;
+        $result[$cpt][] = $cumul[$cpt][] = (string) $day->Day_Name;
         foreach($usersAssociate as $userAssociate){
           $this->db->from('Statistic');
           $where = array('Statistic.Day_Id' => $day->Day_Id,
@@ -63,21 +64,27 @@ class Statistic extends CI_Controller {
           $resultUser = $query->result();
           if(!empty($resultUser)){
             $result[$cpt][] = (int) $resultUser[0]->Statistic_Point;
+            $cumul[$cpt][$resultUser[0]->User_Id] = (int) $cumul[($cpt-1)][$resultUser[0]->User_Id] + (int) $resultUser[0]->Statistic_Point;
           }else{
             $result[$cpt][] = 0;
+            $cumul[$cpt][$userAssociate->User_Id] = (int) $cumul[($cpt-1)][$userAssociate->User_Id] + 0;
+          
           }
           
         }
         $cpt ++;
        }
        
-       $result[$cpt][] = '';
+       $result[$cpt][] = $cumul[$cpt][] = '';
        foreach($usersAssociate as $userAssociate){
-        $result[$cpt][] = 0;
+        $result[$cpt][] = $cumul[$cpt][] = 0;
        }
        
        $championshipsArray[$championship->Championship_Id]['result'] = $result; 
+       $championshipsArray[$championship->Championship_Id]['cumul'] = $cumul; 
     }
+    
+    
     
     
     $data['championships'] = $championshipsArray;

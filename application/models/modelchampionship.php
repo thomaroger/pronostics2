@@ -29,14 +29,20 @@ class Modelchampionship extends CI_MODEL {
     return $query->result();
   }
   
-  public static function getLastChampionship($limit){
+  public static function getLastChampionship($user, $limit = 5){
       $results = array();
       $instChampionship = new self();
       $instChampionship->db->from('Championship');
       $instChampionship->db->join('Day', ' Day.Championship_Id = Championship.Championship_Id', 'left');
       $instChampionship->db->join('Statistic', ' Day.Day_Id = Statistic.Day_Id', 'left');
       $instChampionship->db->join('User', ' User.User_Id = Statistic.User_Id', 'left');
-      
+      $instChampionship->db->join('Championship_has_User', ' Championship_has_User.Championship_Id = Championship.Championship_Id');
+       
+      $where = array('Day.Day_Status' => self::EXPIRED, 
+                      'Championship_has_User.User_Id' => $user->User_Id);
+                      
+      $instChampionship->db->where($where);
+        
       $instChampionship->db->limit($limit); 
       $query = $instChampionship->db->get();
       
