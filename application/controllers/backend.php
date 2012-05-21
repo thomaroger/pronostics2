@@ -31,31 +31,33 @@ class Backend extends CI_Controller {
         $pronostics = $_POST['pronos'];
         $games = $this->modelDay->getGames($pronostics['dayId']);
         foreach($games as $game){
-            $pronostic =$pronostics[$game->Game_Id];
-            if($pronostic['team1'] > $pronostic['team2']){
-			    $winner = $game->Game_Team1;
-			}else if($pronostic['team1'] < $pronostic['team2']){
-				$winner = $game->Game_Team2;
-			}else{
-				$winner = 'Nul';
-			}
-			$insert = array('Game_Id' => (int)$game->Game_Id);
-            $this->db->where($insert);
-            $query = $this->db->get('Result');  
-            if($query->num_rows() == 0) {             
-    			$insert['Result_Team1'] = (int)$pronostic['team1'];
-    			$insert['Result_Team2'] = (int)$pronostic['team2'];      
-    			$insert['Result_Win'] = $winner;        
-    			$this->db->insert('Result', $insert);
-    			$data["status"] = 'insert'; 
-		    }else{
-		        $update = array();
-		        $update['Result_Team1'] = (int)$pronostic['team1'];
-    			$update['Result_Team2'] = (int)$pronostic['team2'];      
-    			$update['Result_Win'] = $winner;
-    			$this->db->where($insert);
-		        $this->db->update('Result', $update); 
-		        $data["status"] = 'updated'; 
+            if(!empty($pronostics[$game->Game_Id])) {
+                $pronostic = $pronostics[$game->Game_Id];
+                if($pronostic['team1'] > $pronostic['team2']){
+    			    $winner = $game->Game_Team1;
+    			}else if($pronostic['team1'] < $pronostic['team2']){
+    				$winner = $game->Game_Team2;
+    			}else{
+    				$winner = 'Nul';
+    			}
+    			$insert = array('Game_Id' => (int)$game->Game_Id);
+                $this->db->where($insert);
+                $query = $this->db->get('Result');  
+                if($query->num_rows() == 0) {             
+        			$insert['Result_Team1'] = (int)$pronostic['team1'];
+        			$insert['Result_Team2'] = (int)$pronostic['team2'];      
+        			$insert['Result_Win'] = $winner;        
+        			$this->db->insert('Result', $insert);
+        			$data["status"] = 'insert'; 
+    		    }else{
+    		        $update = array();
+    		        $update['Result_Team1'] = (int)$pronostic['team1'];
+        			$update['Result_Team2'] = (int)$pronostic['team2'];      
+        			$update['Result_Win'] = $winner;
+        			$this->db->where($insert);
+    		        $this->db->update('Result', $update); 
+    		        $data["status"] = 'updated'; 
+    		    }
 		    }                
         }
         $this->db->where('Day_Id', $pronostics['dayId']);
@@ -67,7 +69,6 @@ class Backend extends CI_Controller {
     $dayId = $this->uri->segment(3);
     $day = $this->modelDay->getDay($dayId);
     $games = $this->modelDay->getGames($dayId, 0, true);
-    
     $data['user'] = $user;
     $data['day'] = $day[0];
     $data['games'] = $games;
@@ -254,10 +255,12 @@ class Backend extends CI_Controller {
         $dataGame = $_POST['game'];
         $teams = array($_POST['game']['Game_Team1'], $_POST['game']['Game_Team2']);
         $this->db->from('Game');
-        $this->db->where('Day_Id =', $_POST['game']['day_Id']);
+        
         $this->db->where_in('Game_Team1', $teams);
         $this->db->or_where_in('Game_Team2', $teams);
+        $this->db->where('Day_Id =', $_POST['game']['day_Id']);
         $query = $this->db->get();
+        echo $this->db->last_query();
         if($query->num_rows() > 0){
           $data['status'] = 'fail';
         }else{

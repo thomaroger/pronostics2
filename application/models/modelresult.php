@@ -29,7 +29,6 @@ class Modelresult extends CI_MODEL {
           $result = $this->db->get('Result')->result();
           $this->db->where('Game_Id', $game->Game_Id);
           $pronostics = $this->db->get('Prognosis')->result();
-          
           foreach($pronostics as $pronostic){
               $point = 0;
               if($pronostic->Prognosis_Win == $result[0]->Result_Win){

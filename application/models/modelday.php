@@ -9,18 +9,20 @@ class Modelday extends CI_MODEL {
     $this->db->where('Day_Id',(int) $dayId);
     
     if($isAdmin){
-        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id', 'left'); 
+        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id'); 
     }else if($userId > 0) {
-        $this->db->join('Prognosis', ' Prognosis.Game_Id = Game.Game_Id', 'left'); 
+        $this->db->join('Prognosis', ' Prognosis.Game_Id = Game.Game_Id'); 
         $this->db->where('Prognosis.User_id',(int) $userId); 
     }
 
     $query = $this->db->get();
+
     if($query->num_rows() == 0) {
         $this->db->from('Game');
         $this->db->where('Day_Id',(int) $dayId);  
         $query = $this->db->get();
     }
+    
     return $query->result();
   }
   
