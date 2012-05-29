@@ -154,9 +154,33 @@ class Backend extends CI_Controller {
     $data = array();
     if(!empty($_POST)){ 
         $dataUser = $_POST['user'];
+        $password = $dataUser['User_Password'];
         $dataUser['User_Password'] = md5($dataUser['User_Password']);
         $this->db->insert('User', $dataUser); 
         $data['status'] = 'insert';
+
+         $where = array('Mail_Tag' => 'new_user');
+         $this->db->where($where);
+         $query = $this->db->get('Mail');
+         $mails = $query->result();
+         $mail = $mails[0];
+         $text = $mail->Mail_Text;
+
+         $keys = array('{{User_Email}}', '{{User_Password}}');
+         $values = array($dataUser['User_Email'], $password);
+         $text = str_replace($keys, $values, $text);
+
+         $config = array();
+         $config['mailtype'] = 'html';
+         $this->email->initialize($config);
+          
+         $this->email->from('thomaroger@gmail.com', 'Pronostics');
+         $this->email->to($dataUser['User_Email']); 
+         $this->email->subject('[Pronostics] : New User');
+         $this->email->message($text);	
+    
+         $this->email->send();
+        
     }
     $query = $this->db->get('User');
     

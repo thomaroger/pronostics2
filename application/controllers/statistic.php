@@ -75,9 +75,9 @@ class Statistic extends CI_Controller {
         $cpt ++;
        }
        
-       $result[$cpt][] = $cumul[$cpt][] = '';
+       $result[$cpt][] = '';
        foreach($usersAssociate as $userAssociate){
-        $result[$cpt][] = $cumul[$cpt][] = 0;
+        $result[$cpt][] =  0;
        }
        
        $championshipsArray[$championship->Championship_Id]['result'] = $result; 
