@@ -279,13 +279,10 @@ class Backend extends CI_Controller {
         $dataGame = $_POST['game'];
         $teams = array($_POST['game']['Game_Team1'], $_POST['game']['Game_Team2']);
         $this->db->from('Game');
-
         $this->db->where('Day_Id =', $_POST['game']['day_Id']);
-        
         $this->db->where_in('Game_Team1', $teams);
         $this->db->or_where_in('Game_Team2', $teams);
         $query = $this->db->get();
-        echo $this->db->last_query();
         if($query->num_rows() > 0){
           $data['status'] = 'fail';
         }else{
