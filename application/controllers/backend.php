@@ -127,8 +127,11 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['championships'] = $query->result();
+    
     $data['action'] = 'championships';
     
+    $query = $this->db->get('GameType');
+    $data['gameTypes'] = $query->result();
     $query = $this->db->get('GameType');
     $values = array('0' => 'All');
     foreach ($query->result() as $result){
