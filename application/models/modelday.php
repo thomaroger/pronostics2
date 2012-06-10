@@ -9,7 +9,7 @@ class Modelday extends CI_MODEL {
     $this->db->where('Day_Id',(int) $dayId);
     
     if($isAdmin){
-        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id'); 
+        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id', 'left'); 
     }else if($userId > 0) {
         $this->db->join('Prognosis', ' Prognosis.Game_Id = Game.Game_Id'); 
         $this->db->where('Prognosis.User_id',(int) $userId); 
