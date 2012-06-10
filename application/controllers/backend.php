@@ -72,6 +72,7 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['day'] = $day[0];
     $data['games'] = $games;
+    $data['games2'] = $this->modelDay->getGames($dayId);
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'results';
     
