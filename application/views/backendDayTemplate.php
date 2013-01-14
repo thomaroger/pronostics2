@@ -17,7 +17,7 @@
           <tr>
             <th>Domicile</th>
             <th colspan="2" >Score</th>
-            <th>Extérieur</th>
+            <th>ExtÃ©rieur</th>
           </tr>
         </thead>
         <tbody>
