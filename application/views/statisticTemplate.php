@@ -23,22 +23,25 @@
         var options = {
           title: "<?php echo $championship['name'] ?>"
         };
-        
-        var dataCumul = google.visualization.arrayToDataTable(<?php echo json_encode($championship['cumul'])?>);
+
+ var dataCumul = google.visualization.arrayToDataTable(<?php echo json_encode($championship['cumul'])?>);
         var optionsCumul = {
           title: "<?php echo $championship['name'] ?> Cumul"
         };
+        
+      
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_<?php echo $championship['id'];?>'));
         chart.draw(data, options);
-        
-        var chartCumul = new google.visualization.LineChart(document.getElementById('cumul_<?php echo $championship['id'];?>'));
+
+ var chartCumul = new google.visualization.LineChart(document.getElementById('cumul_<?php echo $championship['id'];?>'));
         chartCumul.draw(dataCumul, optionsCumul);
         
       }
     </script>
     
     <div id="chart_<?php echo $championship['id'];?>" style="width: 800px; height: 500px;"></div>
+
     <div id="cumul_<?php echo $championship['id'];?>" style="width: 800px; height: 500px;"></div>
     <?php endif; ?>
     <?php endforeach; ?> 

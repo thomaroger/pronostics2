@@ -54,11 +54,11 @@ $db['default']['password'] = 'wqa123';
 $db['default']['database'] = 'thomarogpronos';
 $db['default']['dbdriver'] = 'mysql';
 
-$db['default']['hostname'] = 'localhost';
+/*$db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
 $db['default']['password'] = '';
 $db['default']['database'] = 'pronostics';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['dbdriver'] = 'mysql';*/
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;

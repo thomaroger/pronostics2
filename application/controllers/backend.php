@@ -72,6 +72,7 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['day'] = $day[0];
     $data['games'] = $games;
+    $data['games2'] = $this->modelDay->getGames($dayId);
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'results';
     
@@ -127,8 +128,11 @@ class Backend extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['championships'] = $query->result();
+    
     $data['action'] = 'championships';
     
+    $query = $this->db->get('GameType');
+    $data['gameTypes'] = $query->result();
     $query = $this->db->get('GameType');
     $values = array('0' => 'All');
     foreach ($query->result() as $result){
@@ -154,9 +158,33 @@ class Backend extends CI_Controller {
     $data = array();
     if(!empty($_POST)){ 
         $dataUser = $_POST['user'];
+        $password = $dataUser['User_Password'];
         $dataUser['User_Password'] = md5($dataUser['User_Password']);
         $this->db->insert('User', $dataUser); 
         $data['status'] = 'insert';
+
+         $where = array('Mail_Tag' => 'new_user');
+         $this->db->where($where);
+         $query = $this->db->get('Mail');
+         $mails = $query->result();
+         $mail = $mails[0];
+         $text = $mail->Mail_Text;
+
+         $keys = array('{{User_Email}}', '{{User_Password}}');
+         $values = array($dataUser['User_Email'], $password);
+         $text = str_replace($keys, $values, $text);
+
+         $config = array();
+         $config['mailtype'] = 'html';
+         $this->email->initialize($config);
+          
+         $this->email->from('thomaroger@gmail.com', 'Pronostics');
+         $this->email->to($dataUser['User_Email']); 
+         $this->email->subject('[Pronostics] : New User');
+         $this->email->message($text);	
+    
+         $this->email->send();
+        
     }
     $query = $this->db->get('User');
     
@@ -253,15 +281,24 @@ class Backend extends CI_Controller {
     $data = array();
     if(!empty($_POST)){ 
         $dataGame = $_POST['game'];
+        $nbLines = 0;
         $teams = array($_POST['game']['Game_Team1'], $_POST['game']['Game_Team2']);
         $this->db->from('Game');
         
-        $this->db->where_in('Game_Team1', $teams);
-        $this->db->or_where_in('Game_Team2', $teams);
         $this->db->where('Day_Id =', $_POST['game']['day_Id']);
+        $this->db->where_in('Game_Team1', $teams);
         $query = $this->db->get();
-        echo $this->db->last_query();
-        if($query->num_rows() > 0){
+        $nbLines = $query->num_rows();
+  
+        if($query->num_rows() == 0) {
+           $this->db->from('Game');
+           $this->db->where('Day_Id =', $_POST['game']['day_Id']);
+           $this->db->where_in('Game_Team2', $teams);
+           $query = $this->db->get();
+           $nbLines += $query->num_rows();
+        }
+
+        if($nbLines > 0){
           $data['status'] = 'fail';
         }else{
           $this->db->insert('Game', $dataGame); 
@@ -499,3 +536,4 @@ class Backend extends CI_Controller {
   
 }
 
+			

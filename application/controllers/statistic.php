@@ -16,8 +16,7 @@ class Statistic extends CI_Controller {
     $data['user'] = $user;
     $data['isAjax'] = $this->input->isAjax();
     $data['action'] = 'statistics';
-    
-    $championships = $this->modelChampionship->getAllChampionships();
+    $championships = $this->modelChampionship->getAllChampionships($user->User_Id);
     foreach ($championships as $championship){
        
        $result = array();
@@ -49,11 +48,13 @@ class Statistic extends CI_Controller {
        $result[$cpt][] =  $cumul[$cpt][] =  '';
        foreach($usersAssociate as $userAssociate){
         $result[$cpt][] =  $cumul[$cpt][] = 0;
+        $backcumul[$cpt][$userAssociate->User_Id] = 0;
        }
        
        $cpt ++;
        
        foreach($days as $day){
+        $tmpback = $cpt;
         $result[$cpt][] = $cumul[$cpt][] = (string) $day->Day_Name;
         foreach($usersAssociate as $userAssociate){
           $this->db->from('Statistic');
@@ -64,22 +65,24 @@ class Statistic extends CI_Controller {
           $resultUser = $query->result();
           if(!empty($resultUser)){
             $result[$cpt][] = (int) $resultUser[0]->Statistic_Point;
-            $cumul[$cpt][$resultUser[0]->User_Id] = (int) $cumul[($cpt-1)][$resultUser[0]->User_Id] + (int) $resultUser[0]->Statistic_Point;
-          }else{
+            $cumul[$cpt][] = (int) $backcumul[$tmpback -1][$userAssociate->User_Id] + (int) $resultUser[0]->Statistic_Point;
+$backcumul[$tmpback][$userAssociate->User_Id] = (int) $backcumul[($tmpback -1)][$userAssociate->User_Id] + ((int) $resultUser[0]->Statistic_Point);          
+}else{
             $result[$cpt][] = 0;
-            $cumul[$cpt][$userAssociate->User_Id] = (int) $cumul[($cpt-1)][$userAssociate->User_Id] + 0;
-          
+            $cumul[$cpt][] = (int) !empty($backcumul[($tmpback -1)][$userAssociate->User_Id])? $backcumul[($tmpback -1)][$userAssociate->User_Id]:0 + 0;
+
+$backcumul[$tmpback][$userAssociate->User_Id] = (int) $backcumul[($tmpback -1)][$userAssociate->User_Id];
           }
           
         }
         $cpt ++;
        }
        
-       $result[$cpt][] = $cumul[$cpt][] = '';
+       $result[$cpt][] = '';
        foreach($usersAssociate as $userAssociate){
-        $result[$cpt][] = $cumul[$cpt][] = 0;
+        $result[$cpt][] =  0;
        }
-       
+      
        $championshipsArray[$championship->Championship_Id]['result'] = $result; 
        $championshipsArray[$championship->Championship_Id]['cumul'] = $cumul; 
     }

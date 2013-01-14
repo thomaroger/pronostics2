@@ -29,7 +29,7 @@ class Modelchampionship extends CI_MODEL {
     return $query->result();
   }
   
-  public static function getLastChampionship($user, $limit = 5){
+  public static function getLastChampionship($user){
       $results = array();
       $instChampionship = new self();
       $instChampionship->db->from('Championship');
@@ -43,8 +43,8 @@ class Modelchampionship extends CI_MODEL {
                       
       $instChampionship->db->where($where);
         
-      $instChampionship->db->limit($limit); 
-      $query = $instChampionship->db->get();
+     $instChampionship->db->order_by('Championship.Championship_Id DESC, Statistic.Statistic_Point DESC'); 
+     $query = $instChampionship->db->get();
       
       foreach($query->result() as  $championship){
           $userName = $championship->User_Name." ".$championship->User_Lastname;
@@ -59,9 +59,14 @@ class Modelchampionship extends CI_MODEL {
       return $results;
   }
   
-  public function getAllChampionships(){
+  public function getAllChampionships($userId = 0){
      $this->db->from('Championship');
-     $this->db->order_by('Championship.Championship_Id ASC'); 
+     if($userId > 0) {
+        $this->db->join('Championship_has_User', ' Championship_has_User.Championship_Id = Championship.Championship_Id');
+        $where = array('Championship_has_User.User_Id' => $userId);
+$this->db->where($where);
+     }
+     $this->db->order_by('Championship.Championship_Id DESC'); 
 
      $query = $this->db->get();
      return $query->result();

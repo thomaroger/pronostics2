@@ -9,7 +9,7 @@ class Modelday extends CI_MODEL {
     $this->db->where('Day_Id',(int) $dayId);
     
     if($isAdmin){
-        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id'); 
+        $this->db->join('Result', ' Result.Game_Id = Game.Game_Id', 'left'); 
     }else if($userId > 0) {
         $this->db->join('Prognosis', ' Prognosis.Game_Id = Game.Game_Id'); 
         $this->db->where('Prognosis.User_id',(int) $userId); 
@@ -22,7 +22,6 @@ class Modelday extends CI_MODEL {
         $this->db->where('Day_Id',(int) $dayId);  
         $query = $this->db->get();
     }
-    
     return $query->result();
   }
   
@@ -36,12 +35,12 @@ class Modelday extends CI_MODEL {
       return $query->result();
   }
 
-  public static function getLastDays($user, $limit = 5){
+  public static function getLastDays($user){
        $instDay = new self();
        $instDay->db->from('Day');
-       $instDay->db->join('Statistic', ' Statistic.Day_Id = Day.Day_Id', 'left'); 
-       $instDay->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id', 'left');
-       $instDay->db->join('User', ' Statistic.User_Id = User.User_Id', 'left');
+       $instDay->db->join('Statistic', ' Statistic.Day_Id = Day.Day_Id'); 
+       $instDay->db->join('Championship', ' Day.Championship_Id = Championship.Championship_Id');
+       $instDay->db->join('User', ' Statistic.User_Id = User.User_Id');
        $instDay->db->join('Championship_has_User', ' Championship_has_User.Championship_Id = Championship.Championship_Id');
        
        $where = array('Day.Day_Status' => self::EXPIRED, 
@@ -49,9 +48,8 @@ class Modelday extends CI_MODEL {
                       
        $instDay->db->where($where);
        
-       $instDay->db->order_by("Day.Day_Id DESC, Statistic.Statistic_Point DESC"); 
+       $instDay->db->order_by("Day.Day_Prognosis_End DESC, Statistic.Statistic_Point DESC"); 
        
-       $instDay->db->limit($limit); 
        $query = $instDay->db->get();
        return $query->result();
   }

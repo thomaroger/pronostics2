@@ -21,11 +21,11 @@
           </tr>
         </thead>
         <tbody>
-          <?php foreach($games as $game) :?>
+          <?php foreach($games as $k => $game) :?>
               <tr>
                   <td><?php echo $game->Game_Team1?></td>
-                  <td><input type="text" name="pronos[<?php echo $game->Game_Id?>][team1]" value="<?php echo isset($game->Result_Team1)?$game->Result_Team1:''?>" required></td>
-                  <td><input type="text" name="pronos[<?php echo $game->Game_Id?>][team2]" value="<?php echo isset($game->Result_Team2)?$game->Result_Team2:''?>" required></td>
+                  <td><input type="text" name="pronos[<?php echo $games2[$k]->Game_Id?>][team1]" value="<?php echo isset($game->Result_Team1)?$game->Result_Team1:''?>" required></td>
+                  <td><input type="text" name="pronos[<?php echo $games2[$k]->Game_Id?>][team2]" value="<?php echo isset($game->Result_Team2)?$game->Result_Team2:''?>" required></td>
                   <td><?php echo $game->Game_Team2?></td>
               </tr>
           <?php endforeach;?>
@@ -51,4 +51,4 @@
 
 <?php if(!$isAjax) : ?>
     <?php $this->load->view('footerTemplate');?>
-<?php endif; ?>
+<?php endif; ?>	

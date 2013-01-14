@@ -17,7 +17,7 @@
         <ul class="nav nav-list"><li class="nav-header">Last Days</li></ul>
         <ul><div>
 <?php
-    $days = ModelDay::getLastDays($user);
+    $days = ModelDay::getLastDays($user,6);
     $dayId = 0;
     foreach($days as $day):  
           if($dayId != $day->Day_Id): 

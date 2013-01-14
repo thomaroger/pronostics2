@@ -38,35 +38,35 @@ class Login extends CI_Controller {
 	}
 	
 	public function generatePassword(){
-	   $newPassword = $this->modelUser->generatePassword();
-	   $data = array('User_Password' => md5($newPassword));
-     $this->db->where('User_Email', $_POST['email']);
-     $this->db->update('User', $data);
-
-     
-     $where = array('Mail_Tag' => 'new_password');
-     $this->db->where($where);
-     $query = $this->db->get('Mail');
-     $mails = $query->result();
-     $mail = $mails[0];
-     $text = $mail->Mail_Text;
-     
-     $keys = array('{{User_Email}}', '{{User_Password}}');
-     $values = array($_POST['email'], $newPassword);
-     $text = str_replace($keys, $values, $text);
+    	 $newPassword = $this->modelUser->generatePassword();
+    	 $data = array('User_Password' => md5($newPassword));
+         $this->db->where('User_Email', $_POST['email']);
+         $this->db->update('User', $data);
     
-     $config = array();
-     $config['mailtype'] = 'html';
-     $this->email->initialize($config);
-      
-     $this->email->from('thomaroger@gmail.com', 'Pronostics');
-     $this->email->to($_POST['email']); 
-     $this->email->subject('[Pronostics] : New Password');
-     $this->email->message($text);	
-
-     $this->email->send();
+         
+         $where = array('Mail_Tag' => 'new_password');
+         $this->db->where($where);
+         $query = $this->db->get('Mail');
+         $mails = $query->result();
+         $mail = $mails[0];
+         $text = $mail->Mail_Text;
+         
+         $keys = array('{{User_Email}}', '{{User_Password}}');
+         $values = array($_POST['email'], $newPassword);
+         $text = str_replace($keys, $values, $text);
+        
+         $config = array();
+         $config['mailtype'] = 'html';
+         $this->email->initialize($config);
+          
+         $this->email->from('thomaroger@gmail.com', 'Pronostics');
+         $this->email->to($_POST['email']); 
+         $this->email->subject('[Pronostics] : New Password');
+         $this->email->message($text);	
+    
+         $this->email->send();
      
-     redirect('/login/password');
+        redirect('/login/password');
      
 	}
 }
